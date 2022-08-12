@@ -6,10 +6,34 @@
 class App {
   constructor() {
     this.renderApp();
+    this.bornFifteen(this.inventors);
+    this.fullNames(this.inventors);
+    this.oldToYoung(this.inventors);
+    this.totalYear(this.inventors);
+    this.lifetimeOrder(this.inventors);
+    this.lastNameOrder(this.people);
+    this.sumUpInstances(this.data);
   }
   template = `
   <p><em>Psst: have a look at the JavaScript Console</em> 💁</p>
   `;
+
+  data = [
+    "car",
+    "car",
+    "truck",
+    "truck",
+    "bike",
+    "walk",
+    "car",
+    "van",
+    "bike",
+    "walk",
+    "car",
+    "van",
+    "car",
+    "truck",
+  ];
 
   inventors = [
     { first: "Albert", last: "Einstein", year: 1879, passed: 1955 },
@@ -72,42 +96,82 @@ class App {
 
   // Array.prototype.filter()
   // 1. Filter the list of inventors for those who were born in the 1500's
+  bornFifteen(inventors) {
+    const fifteen = inventors.filter(
+      (inventor) => inventor.year >= 1500 && inventor.year < 1600
+    );
+    console.table(fifteen);
+  }
 
   // Array.prototype.map()
   // 2. Give us an array of the inventors first and last names
+  fullNames(inventors) {
+    const fullNames = inventors.map(
+      (inventor) => inventor.first + " " + inventor.last
+    );
+    console.log(fullNames);
+  }
 
   // Array.prototype.sort()
   // 3. Sort the inventors by birthdate, oldest to youngest
+  oldToYoung(inventors) {
+    const ordered = inventors.sort((a, b) => a.year - b.year);
+    console.table(ordered);
+  }
 
   // Array.prototype.reduce()
   // 4. How many years did all the inventors live all together?
+  lifetime(inventor) {
+    return inventor.passed - inventor.year;
+  }
+
+  totalYear(inventors) {
+    const years = inventors.reduce(
+      (sum, inventor) => sum + this.lifetime(inventor),
+      0
+    );
+    console.log(years);
+  }
 
   // 5. Sort the inventors by years lived
+  lifetimeOrder(inventors) {
+    const orderedLifetime = inventors.sort(
+      (a, b) => this.lifetime(b) - this.lifetime(a)
+    );
+    console.table(orderedLifetime);
+  }
 
   // 6. create a list of Boulevards in Paris that contain 'de' anywhere in the name
   // https://en.wikipedia.org/wiki/Category:Boulevards_in_Paris
+  findBoulevardsIncludeDe() {
+    const category = document.querySelector(".mw-category");
+    const links = [...category.querySelectorAll("a")];
+
+    const de = links
+      .map((link) => link.textContent)
+      .filter((streetName) => streetName.includes("de"));
+  }
 
   // 7. sort Exercise
   // Sort the people alphabetically by last name
+  lastNameOrder(people) {
+    const ordered = people.sort();
+    console.log(ordered);
+  }
 
   // 8. Reduce Exercise
   // Sum up the instances of each of these
-  data = [
-    "car",
-    "car",
-    "truck",
-    "truck",
-    "bike",
-    "walk",
-    "car",
-    "van",
-    "bike",
-    "walk",
-    "car",
-    "van",
-    "car",
-    "truck",
-  ];
+
+  sumUpInstances(arr) {
+    const sumUp = arr.reduce((count, element) => {
+      if (!count[element]) count[element] = 0;
+
+      count[element]++;
+      return count;
+    }, {});
+
+    console.log(sumUp);
+  }
 
   renderApp() {
     document.querySelector("#app").innerHTML = this.template;
